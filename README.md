@@ -23,3 +23,7 @@ Will split the file in small chunks of 50 buckets per file.
 Trigger the `s3process.sh` to execute each of the above chunk file.   
 #### Final artifacts will be stored in csv directory with result of each file in seperate file with respective name.   
 To check if the execution is completed, check process list , if it is empty, your CSVs are ready   
+
+```
+ps awux | grep s3process.sh
+```
