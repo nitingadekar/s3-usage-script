@@ -14,22 +14,23 @@ while read B dummy; do
 done
 }
 
-echo "Bucket Name, Storage, Last updated date , Last updated time, Last updated file"
-total=0
+#echo "Bucket Name, Storage, Last updated date , Last updated time, Last updated file"
+
 for bucket in `cat $1`
 do
 ##get storage per bucket
-	bytes=`aws s3 ls s3://$bucket --recursive | awk '{print $3}'`
-	for byte in $bytes
-	do
-	       total=$(($byte+$total))
-	done
+	total=0
+	total=`aws s3 ls s3://$bucket  --recursive | awk '{print $3}' | paste -sd+ | bc`
 	#convert to human values
-	human=`echo $total | human_print`
+	#human=`echo $total` # dont want human readable as cant convert in one unit if want formating in excel 
+	
 	#get last updated details 
-	last=` aws s3 ls $bucket  --recursive   | sort   | tail -n 1 |  awk '{print $1 ,"," $2 ," ," $4}'`
-	##generate CSV
+	#last=` aws s3 ls $bucket  --recursive   | sort   | tail -n 1 |  awk '{print $1 ,"," $2 ," ," $4}'`  # commented as sort takes lots of memory and entire list is truncated. 
 
-        echo "$bucket, $human, $last"
+	##generate CSV
+        # echo "$bucket, $total, $last"   #commented if #last is commented
+	
+	#without last updated details
+        echo "$bucket, $total"
 done
 
